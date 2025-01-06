@@ -1,4 +1,5 @@
 const ContactUs = require("../models/contactus.model");
+const nodemailer = require("nodemailer");
 
 const getResponse = async (req, res) => {
   const contactus = req.body;
@@ -14,6 +15,27 @@ const getResponse = async (req, res) => {
 
   try {
     await newContactUs.save();
+
+    // Configure Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: process.env.EMAIL_SERVICE,
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS,
+      },
+    });
+
+    // Email options
+    const mailOptions = {
+      from: process.env.EMAIL_USER,
+      to: process.env.ADMIN_EMAIL,
+      subject: `A Query from ${contactus.name}`,
+      text: `Email: ${contactus.email}\nMessage: ${contactus.message}`,
+    };
+
+    // Send email
+    await transporter.sendMail(mailOptions);
+
     res
       .status(201)
       .json({ success: true, message: "Message sent successfully" });
