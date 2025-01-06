@@ -10,7 +10,7 @@ connectDB();
 const PORT = process.env.PORT || 5000;
 
 const corsOptions = {
-  origin: 'https://geekroom-plaksha.tech/',
+  origin: 'https://geekroom-plaksha.tech',
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
 };
